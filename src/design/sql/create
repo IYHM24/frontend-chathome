@@ -1,0 +1,175 @@
+USE [chat_home]
+GO
+/****** Object:  StoredProcedure [dbo].[UsuariosOperation]    Script Date: 04/05/2025 12:11:47 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[UsuariosOperation]
+	@id int null,
+	@nombre nvarchar(250) null,
+	@apellido nvarchar(250) null,
+	@nombre_usuario nvarchar(250) null,
+	@online bit null,
+	@fecha_ultima_conexion datetime null,
+	@sesion nvarchar(250) null,
+	@token_google nvarchar(max) null,
+	@uuid_google nvarchar(max) null,
+	@correo varchar(250) null,
+	@foto_perfil varchar(max) null,
+	@contextId varchar(250) null,
+	@proceso nvarchar(250)
+AS
+BEGIN
+	IF @proceso = 'obtener usuario'
+	BEGIN
+		SELECT nombre_usuario FROM [dbo].[Usuario] WHERE uuid_google = @uuid_google
+	END
+	ELSE IF @proceso = 'validar usuario'
+	BEGIN
+		SELECT COUNT(id) as numero_usuarios FROM [dbo].[Usuario] Where nombre_usuario = @nombre_usuario
+	END
+	ELSE IF @proceso = 'set Online' OR @proceso = 'set Offline'
+	BEGIN
+		DECLARE @tabla_usuarios_chat TABLE (
+			chat_id varchar(250),
+			ultimo_mensaje varchar(MAX),
+			id_ultimo_mensaje varchar(250),
+			mensajes_sin_leer int,
+			[time] int,
+			[type] varchar(250),
+			ui_usuario_remitente varchar(250),
+			nombre_usuario nchar(250),
+			[id] int,
+			[nombre] nchar(250),
+			[apellido] nchar(250),
+			[online] bit,
+			[fecha_ultima_conexion] datetime,
+			[sesion] nchar(250),
+			[token_google] nvarchar(250),
+			[uuid_google] nvarchar(250),
+			[correo] varchar(250),
+			[contextId] varchar(250),
+			[foto_perfil] varchar(max)
+		);
+		--Establecer online
+		IF @proceso  = 'set Online' 
+		BEGIN
+			UPDATE [dbo].[Usuario] SET contextId = @contextId, [online] = 1 WHERE uuid_google = @uuid_google
+		END
+		--Establecer offline
+		ELSE
+		BEGIN
+			DECLARE @uuid varchar(250) = (SELECT [uuid_google] FROM Usuario where contextId = @contextId)
+			UPDATE [dbo].[Usuario] SET contextId = '', [online] = 0, fecha_ultima_conexion = GETDATE() WHERE contextId = @contextId
+		END
+		-- Ejecutar el procedimiento almacenado y guardar el resultado en la tabla variable
+		INSERT INTO @tabla_usuarios_chat (
+			chat_id,
+			ultimo_mensaje,
+			id_ultimo_mensaje,
+			mensajes_sin_leer,
+			[time],
+			[type],
+			ui_usuario_remitente,
+			nombre_usuario,
+			[id],
+			[nombre],
+			[apellido],
+			[online],
+			[fecha_ultima_conexion],
+			[sesion],
+			[token_google],
+			[uuid_google],
+			[correo],
+			[contextId],
+			[foto_perfil]
+		)
+		EXEC [dbo].[UsuariosOperation]
+			@id = NULL,
+			@nombre = NULL,
+			@apellido = NULL,
+			@nombre_usuario = NULL,
+			@online = NULL,
+			@fecha_ultima_conexion = NULL,
+			@sesion = NULL,
+			@token_google = NULL,
+			@uuid_google = @uuid_google,
+			@correo = NULL,
+			@foto_perfil = NULL,
+			@contextId = NULL,
+			@proceso = 'obtener chat usuario';
+    -- Retornar los resultados de la tabla variable
+    SELECT * FROM @tabla_usuarios_chat;
+	END
+	ELSE IF @proceso = 'obtener usuarios'
+	BEGIN
+		SELECT [id]
+			  ,[nombre]
+			  ,[apellido]
+			  ,[nombre_usuario]
+			  ,[online]
+			  ,[fecha_ultima_conexion]
+			  ,[sesion]
+			  ,[token_google]
+			  ,[uuid_google]
+			  ,[correo]
+			  ,[contextId]
+			  ,[foto_perfil]
+		  FROM [dbo].[Usuario]
+	END
+	ELSE IF @proceso = 'obtener chat usuario'
+	BEGIN
+			IF OBJECT_ID('tempdb..#temporal_chats_usuario') IS NOT NULL
+				DROP TABLE #temporal_chats_usuario;
+			CREATE TABLE #temporal_chats_usuario(
+				id int,
+				chat_id varchar(250),
+				ui_usuario varchar(250)
+			)
+			--Conocemos los id de los chat donde esta el usuario
+			INSERT INTO #temporal_chats_usuario(id, chat_id, ui_usuario)
+			SELECT [id]
+				  ,[chat_id]
+				  ,[ui_usuario]
+			  FROM [dbo].[UsuariosVSChat] ctu
+			  Where ctu.ui_usuario = @uuid_google
+			-- en base a esos chat_obtenemos los usuarios que sean diferentes al usuario de la consulta
+			SELECT 
+				uvc.chat_id, -- ID del chat
+				m.texto AS ultimo_mensaje, -- Último mensaje del chat
+				m.id_ultimo_mensaje, -- ID del último mensaje
+				m.mensajes_sin_leer, -- Número de mensajes sin leer
+				m.time AS [time], -- Tiempo del último mensaje
+				m.type AS [type], -- Tipo del mensaje
+				m.ui_usuario_remitente, --usuario remitente del mensaje
+				u.nombre_usuario, -- Nombre del usuario
+				u.[id],
+				u.[nombre],
+				u.[apellido],
+				u.[online],
+				u.[fecha_ultima_conexion],
+				u.[sesion],
+				u.[token_google],
+				u.[uuid_google],
+				u.[correo],
+				u.[contextId],
+				u.[foto_perfil]
+				FROM [UsuariosVSChat] uvc
+				INNER JOIN [Usuario] u ON uvc.ui_usuario = u.uuid_google -- Relacionar usuarios con chats
+				INNER JOIN [Mensaje] m ON m.chat_id = uvc.chat_id  -- Relacionar mensajes con chats
+				INNER JOIN #temporal_chats_usuario tcu ON tcu.chat_id = uvc.chat_id
+				WHERE u.uuid_google !=  @uuid_google 
+
+		
+	END
+END
+
+
+
+

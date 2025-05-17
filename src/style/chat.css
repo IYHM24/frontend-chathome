@@ -1,0 +1,6 @@
+#chat-wrap {
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('../assets/ilustrations/BackgroundChat.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #060506;
+}

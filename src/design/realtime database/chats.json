@@ -1,0 +1,106 @@
+{
+    "chats": [
+        {
+            "id": "chat1",
+            "usuarios": [
+                {
+                    "uid": "c3D8knTdAdRmk6mCzOqd1r75Qi82",
+                    "correo": "dev.andres.gutierrez@gmail.com",
+                    "usuario": "AndresCg"
+                },
+                {
+                    "uid": "Q5JNhxhlvlc0Nt9fvyvpx0XPKpF3",
+                    "correo": "agutierrez@covisian.com",
+                    "usuario": "agutierrez"
+                }
+            ],
+            "mensajes": [
+                {
+                    "id": "msg1",
+                    "content": "Hola",
+                    "sender": "c3D8knTdAdRmk6mCzOqd1r75Qi82",
+                    "time": 1683038400000,
+                    "read": false,
+                    "type": "text" 
+                },
+                {
+                    "id": "msg2",
+                    "content": "Hola, ¿cómo estás?",
+                    "sender": "Q5JNhxhlvlc0Nt9fvyvpx0XPKpF3",
+                    "time": 1683038460000,
+                    "read": false,
+                    "type": "text" 
+                }
+            ],
+            "unreadCount": 0
+        },
+        {
+            "id": "chat2",
+            "usuarios": [
+                {
+                    "uid": "a1B2c3D4e5F6g7H8i9J0kLmNoPqR",
+                    "correo": "user1@example.com",
+                    "usuario": "UserOne"
+                },
+                {
+                    "uid": "z9Y8x7W6v5U4t3S2r1QpOnMlKjIh",
+                    "correo": "user2@example.com",
+                    "usuario": "UserTwo"
+                }
+            ],
+            "mensajes": [
+                {
+                    "id": "msg3",
+                    "content": "Hey, ¿todo bien?",
+                    "sender": "a1B2c3D4e5F6g7H8i9J0kLmNoPqR",
+                    "time": 1683042000000,
+                    "read": true,
+                    "type": "text"
+                },
+                {
+                    "id": "msg4",
+                    "content": "Sí, todo bien. ¿Y tú?",
+                    "sender": "z9Y8x7W6v5U4t3S2r1QpOnMlKjIh",
+                    "time": 1683042060000,
+                    "read": true,
+                    "type": "text"
+                }
+            ],
+            "unreadCount": 0
+        },
+        {
+            "id": "chat3",
+            "usuarios": [
+                {
+                    "uid": "p9O8n7M6l5K4j3I2h1GfEdCbAaZy",
+                    "correo": "user3@example.com",
+                    "usuario": "UserThree"
+                },
+                {
+                    "uid": "x9W8v7U6t5S4r3Q2p1OnMlKjIhGf",
+                    "correo": "user4@example.com",
+                    "usuario": "UserFour"
+                }
+            ],
+            "mensajes": [
+                {
+                    "id": "msg5",
+                    "content": "¿Qué tal tu día?",
+                    "sender": "p9O8n7M6l5K4j3I2h1GfEdCbAaZy",
+                    "time": 1683045600000,
+                    "read": false,
+                    "type": "text"
+                },
+                {
+                    "id": "msg6",
+                    "content": "Bastante ocupado, pero bien.",
+                    "sender": "x9W8v7U6t5S4r3Q2p1OnMlKjIhGf",
+                    "time": 1683045660000,
+                    "read": false,
+                    "type": "text"
+                }
+            ],
+            "unreadCount": 0
+        }
+    ]
+}
