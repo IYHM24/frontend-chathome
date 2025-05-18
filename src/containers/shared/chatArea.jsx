@@ -19,7 +19,7 @@ import { UsuariosOperation } from '@/services/UsuariosController/UsuariosControl
 import { useForm } from "react-hook-form";
 
 
-const ChatArea = ({ id_chat, usuarioChat }) => {
+const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchingRef, setIsSearching, isSearching }) => {
 
     const { remember } = useContext(ConfigContext)
     const { register, reset } = useForm();
@@ -91,6 +91,7 @@ const ChatArea = ({ id_chat, usuarioChat }) => {
                 anexarMensaje(id_chat, newMessageData); // Agregar el mensaje al chat existente
             }
             await notifyBackend(usuariosKeys, newMessage, user); // Almacenar en base de datos
+
         } catch (error) {
             console.error("Error al enviar el mensaje:", error);
         }
@@ -101,7 +102,6 @@ const ChatArea = ({ id_chat, usuarioChat }) => {
             usuariosKeys, newMessage,
             user
         ) => {
-            debugger
             //Almacenar en base de datos
             const unixTime = Math.floor(Date.now() / 1000); // Obtener el tiempo en formato UNIX en segundos
             // Extraer las llaves (ui) del objeto usuarios y guardarlas en un array
@@ -120,6 +120,8 @@ const ChatArea = ({ id_chat, usuarioChat }) => {
                 ui_usuarios: usuariosKeys,
             };
             await MensajesOperations(data)
+            setIsSearching(false);
+            isSearchingRef.current = false;
         }
 
     const crearChat = async (newMessageData, user, chatId) => {
@@ -129,11 +131,11 @@ const ChatArea = ({ id_chat, usuarioChat }) => {
             usuarios: {
                 [user.user.uid]: {
                     correo: user.user.email,
-                    usuario: user.nombre_usuario,
+                    usuario: user.nombre_usuario.trim(),
                 },
                 [usuarioChatRef.current.uuid_google]: {
                     correo: usuarioChatRef.current.correo,
-                    usuario: usuarioChatRef.current.nombre_usuario,
+                    usuario: usuarioChatRef.current.nombre_usuario.trim(),
                 },
             },
             mensajes: {
@@ -151,7 +153,6 @@ const ChatArea = ({ id_chat, usuarioChat }) => {
     }
 
     const sendMessage = async () => {
-        debugger
         const inputElement = document.querySelector('input[placeholder="Type a message"]');
         const messageContent = inputElement.value.trim();
         const user = getUser(remember);

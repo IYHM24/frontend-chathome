@@ -17,17 +17,23 @@ import { MensajesOperations } from '@/services/MensajesController/MensajesContro
 
 const Chatlayout = () => {
 
-  const { db } = useContext(FirebaseContext)
-  const { remember } = useContext(ConfigContext)
-  const [usuariosObject, setUsuariosObject] = useState([])
-  const [usuarioChat, setUsuarioChat] = useState()
-  const [chatsDelUsuario, setChatsDelUsuario] = useState([]);
-  const [id_chat, setid_chat] = useState(0) //Colocar en null luego;
+  const { db } = useContext(FirebaseContext);
+  const { remember } = useContext(ConfigContext);
+  const [usuariosObject, setUsuariosObject] = useState([]);
+  const [usuarioChat, setUsuarioChat] = useState();
+  const [isSearching, setIsSearching] = useState(false);
+  const [usersFound, setUsersFound] = useState([])
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [id_chat, setid_chat] = useState(0); //Colocar en null luego;
   const hubConnectionRef = useRef(null);
   const usuarioChatRef = useRef();
+  const searchValueRef = useRef();
+  const isSearchingRef = useRef(false);
 
 
   const establecer_usuarios = (usuariosBDPrevio, user) => {
+    setLoadingUsers(true);
     const usuariosBD = usuariosBDPrevio && usuariosBDPrevio.map(
       chat => {
         return {
@@ -42,12 +48,21 @@ const Chatlayout = () => {
 
   //Al desconectar un usuario
   const usuarioConectado = (user) => {
-    fetchUsuarios();
+    debugger
+    if (isSearchingRef.current) {
+      BuscarUsuario(searchValueRef.current);
+    } else {
+      fetchUsuarios();
+    }
   }
 
   //Al conectar un usuario
   const usuarioDesconectado = (user) => {
-    fetchUsuarios();
+    if (isSearchingRef.current) {
+      BuscarUsuario(searchValueRef.current);
+    } else {
+      fetchUsuarios();
+    }
   }
 
   const fetchUsuarios = async () => {
@@ -59,8 +74,7 @@ const Chatlayout = () => {
           uuid_google: user.user.uid,
         })
         establecer_usuarios(usuariosBDPrevio.data?.msj, user)
-        debugger
-        if(usuarioChatRef.current){
+        if (usuarioChatRef.current) {
           console.log("usuarioChat", usuarioChatRef.current);
           const usuarioSelecionado = usuariosBDPrevio.data?.msj.find(
             chat => chat.uuid_google === usuarioChatRef.current.uuid_google
@@ -72,6 +86,32 @@ const Chatlayout = () => {
       console.error(error);
     }
   }
+
+
+  const BuscarUsuario = async (username) => {
+    setIsSearching(true);
+    searchValueRef.current = username;
+    isSearchingRef.current = true;
+    if (username) {
+      const usuariosFoundDb = await UsuariosOperation({
+        nombre_usuario: username,
+        proceso: "obtener chat usuario username"
+      })
+      setUsersFound(usuariosFoundDb.data?.msj);
+    }
+    else {
+      setUsersFound(usuariosObject);
+      setIsSearching(false);
+      isSearchingRef.current = false;
+    }
+  }
+
+/*   useEffect(() => {
+    setLoadingUsers(true);
+    BuscarUsuario(searchValue);
+    setLoadingUsers(false);
+  }, [searchValue])
+ */
 
   useEffect(() => {
     //Configuracion del token backend y conexion HUB
@@ -99,21 +139,37 @@ const Chatlayout = () => {
     usuarioChatRef.current = chat;
     setid_chat(chat.chat_id)
   }
-  
+
 
   return (
     <div className='flex'>
       <div className='w-1/4'>
         <SideBar
+          isSearchingRef={isSearchingRef}
+          searchValue={searchValue}
+          setSearchValue={setSearchValue}
+          isSearching={isSearching}
+          setIsSearching={setIsSearching}
+          setUsuariosObject={setUsuariosObject}
+          loadingUsers={loadingUsers}
+          setLoadingUsers={setLoadingUsers}
           usuariosObject={usuariosObject}
           chatClick={chatClick}
           usuarioChat={usuarioChat}
+          usersFound={usersFound}
+          setUsersFound={setUsersFound}
+          BuscarUsuario={BuscarUsuario}
         />
       </div>
       <div className='w-full'>
         <ChatArea
+          isSearching={isSearching}
+          isSearchingRef={isSearchingRef}
+          setIsSearching={setIsSearching}
           id_chat={id_chat}
           usuarioChat={usuarioChat}
+          usuarioChatRef={usuarioChatRef}
+          setid_chat={setid_chat}
         />
       </div>
       {/*  <Outlet /> */}
