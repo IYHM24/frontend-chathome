@@ -159,7 +159,7 @@ const SideBar = ({
                         <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-white font-medium truncate">{chat.nombre_usuario}</h3>
-                                <span className="text-xs text-gray-400">{set_chat_time(chat.time) || ""}</span>
+                                <span className="text-xs text-gray-400">{set_chat_time(chat.time*1000) || ""}</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <p className="text-sm text-gray-400 truncate">{chat.isMe && chat.ultimo_mensaje && chat.isMe ? "Tú: " + chat.ultimo_mensaje : chat.ultimo_mensaje || ""}</p>
