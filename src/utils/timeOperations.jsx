@@ -43,7 +43,7 @@ export const formatearFecha = (date) => {
 
 export const obtenerHoraMilitarUnix = (unixTimestamp) => {
     debugger
-    const date = new Date(unixTimestamp * 1000);
+    const date = new Date(unixTimestamp );
     const horas = String(date.getHours()).padStart(2, "0");
     const minutos = String(date.getMinutes()).padStart(2, "0");
     return `${horas}:${minutos}`;
