@@ -142,8 +142,8 @@ const Chatlayout = () => {
 
 
   return (
-    <div className='flex'>
-      <div className='w-1/4'>
+    <div className='flex flex-col md:flex-row relative'>
+      <div className={`${usuarioChat ? 'hidden md:block' : 'w-full'} md:w-[320px] lg:w-[400px]`}>
         <SideBar
           isSearchingRef={isSearchingRef}
           searchValue={searchValue}
@@ -170,6 +170,7 @@ const Chatlayout = () => {
           usuarioChat={usuarioChat}
           usuarioChatRef={usuarioChatRef}
           setid_chat={setid_chat}
+          setUsuarioChat={setUsuarioChat}
         />
       </div>
       {/*  <Outlet /> */}
@@ -178,5 +179,3 @@ const Chatlayout = () => {
 }
 
 export default Chatlayout
-
-

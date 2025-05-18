@@ -19,7 +19,7 @@ import { UsuariosOperation } from '@/services/UsuariosController/UsuariosControl
 import { useForm } from "react-hook-form";
 
 
-const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchingRef, setIsSearching, isSearching }) => {
+const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchingRef, setIsSearching, isSearching, setUsuarioChat }) => {
 
     const { remember } = useContext(ConfigContext)
     const { register, reset } = useForm();
@@ -124,7 +124,11 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
             isSearchingRef.current = false;
         }
 
-    const crearChat = async (newMessageData, user, chatId) => {
+const crearChat = async (newMessageData, user, chatId) => {
+        if (!usuarioChatRef.current) {
+            console.error("No hay un usuario seleccionado para el chat");
+            return;
+        }
         const newChatData = {
             chatId,
             unreadCount: 0,
@@ -176,10 +180,22 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
     return (
         <>
             {usuarioChat ? (
-                <div className="flex-1 flex flex-col h-screen">
+                <div className="flex-1 flex flex-col h-screen bg-gray-900">
                     {/* Chat header */}
-                    <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-black text-white">
+                    <div className="flex items-center justify-between p-3 md:p-4 border-b border-gray-800 bg-black text-white">
                         <div className="flex items-center gap-3">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="rounded-full md:hidden"
+                                onClick={() => {
+                                    usuarioChatRef.current = null;
+                                    setid_chat(null);
+                                    setUsuarioChat(null);
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                            </Button>
                             <Avatar className="h-10 w-10">
                                 <img src={usuarioChat.foto_perfil} />
                             </Avatar>
@@ -188,7 +204,7 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
                                 <p className="text-xs text-gray-400">{usuarioChat.online ? "Conectado" : "Desconectado"}</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-4 ">
+                        <div className="hidden md:flex items-center gap-4">
                             <Button variant="ghost" size="icon" className="rounded-full">
                                 <FaPhone className="h-5 w-5" />
                             </Button>
@@ -226,7 +242,7 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
                     </div>
 
                     {/* Message input */}
-                    <div className="p-3 border-t border-gray-800 bg-black text-white">
+                    <div className="p-3 border-t border-gray-800 bg-black text-white md:p-4">
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
@@ -277,7 +293,7 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
                     </div>
                 </div>
             ) : (
-                <div className='bg-gray-900 h-full flex justify-center items-center'>
+                <div className='hidden md:flex bg-gray-900 h-screen justify-center items-center p-4'>
                     <div className='text-white text-center flex gap-5 flex-col'>
                         <h2 className='text-5xl'>👋🏼</h2>
                         <h2 className='text-4xl'> <strong>Bienvenido a Chat Home</strong> </h2>

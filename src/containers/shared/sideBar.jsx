@@ -84,9 +84,9 @@ const SideBar = ({
     }
 
     return (
-        <div className="w-full max-w-sm border-r border-gray-800 bg-black !h-screen">
+    <div className="w-full border-r border-gray-800 bg-black min-h-screen md:!h-screen">
             {/* User profile and actions */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-800">
+            <div className="flex items-center justify-between p-3 md:p-4 border-b border-gray-800">
                 <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10 border-2 border-purple-500">
                         <img
@@ -141,7 +141,7 @@ const SideBar = ({
             </div>
 
             {/* Chat list */}
-            <div className="overflow-y-auto h-[calc(100vh-132px)]">
+            <div className="overflow-y-auto h-[calc(100vh-80px)] md:h-[calc(100vh-132px)]">
                 {!loadingUsers && usersFound.length > 0 ? usersFound.map((chat, index) => (
                     <div
                         onClick={() => { pasarDatosChat(chat) }}
