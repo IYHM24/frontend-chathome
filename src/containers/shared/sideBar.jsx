@@ -17,6 +17,7 @@ import {
 import SideBarSkeleton from '@/components/spinners/side_bar_skeleton'
 import NoEncontrado from '@/components/busqueda/no_encontrado'
 import Logo from '@/assets/logo/logo.png'
+import { set } from 'firebase/database'
 
 const SideBar = ({
     isSearching,
@@ -71,13 +72,18 @@ const SideBar = ({
         return ""
     }
 
-
-
     useEffect(() => {
         configurar_foto_perfil();
     }, [])
 
     const pasarDatosChat = (chat) => {
+        if(isSearching){
+            const validar_existencia = usuariosObject.find((user) => user.uuid_google === chat.uuid_google);
+            if(validar_existencia){
+                chat = validar_existencia;
+            }
+            setIsSearching(false);
+        }
         chatClick(chat)
     }
 

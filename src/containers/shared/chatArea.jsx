@@ -252,10 +252,10 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
                             className="flex items-center gap-2"
                         >
                             <div className="flex gap-2">
-                                <Button variant="ghost" size="icon" className="rounded-full">
+                               {/*  <Button variant="ghost" size="icon" className="rounded-full">
                                     <FaSmile className="h-5 w-5" />
-                                </Button>
-                                <Button variant="ghost" size="icon" className="rounded-full relative group">
+                                </Button> */}
+                               {/*  <Button variant="ghost" size="icon" className="rounded-full relative group">
                                     <FaPaperclip className="h-5 w-5" />
                                     <div className="absolute bottom-full left-0 hidden group-hover:flex flex-col gap-2 bg-gray-900 p-2 rounded-lg border border-gray-800 text-white">
                                         <span className="rounded-full p-2 hover:bg-white hover:text-black">
@@ -268,27 +268,27 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
                                             <FaFile className="h-5 w-5" />
                                         </span>
                                     </div>
-                                </Button>
+                                </Button> */}
                             </div>
                             <Input
                                 {...register("message", { required: true })}
                                 placeholder="Type a message"
                                 className="h-10 bg-gray-900 border-gray-800 rounded-full w-full"
                             />
-                            <Button
+                           {/*  <Button
                                 variant="ghost"
                                 size="icon"
                                 className="rounded-full"
                             >
                                 <FaMicrophone className="h-5 w-5" />
-                            </Button>
+                            </Button>*/}
                             <Button
                                 type="submit"
                                 size="icon"
                                 className="rounded-full bg-purple-600 hover:bg-purple-700"
                             >
                                 <Send className="h-5 w-5" />
-                            </Button>
+                            </Button> 
                         </form>
                     </div>
                 </div>
