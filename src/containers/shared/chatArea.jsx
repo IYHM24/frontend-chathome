@@ -204,7 +204,7 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
                                 <p className="text-xs text-gray-400">{usuarioChat.online ? "Conectado" : "Desconectado"}</p>
                             </div>
                         </div>
-                        <div className="hidden md:flex items-center gap-4">
+                        {/* <div className="hidden md:flex items-center gap-4">
                             <Button variant="ghost" size="icon" className="rounded-full">
                                 <FaPhone className="h-5 w-5" />
                             </Button>
@@ -217,14 +217,14 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
                             <Button variant="ghost" size="icon" className="rounded-full">
                                 <FaGripVertical className="h-5 w-5" />
                             </Button>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Messages */}
                     <div
                         id="chat-wrap"
                         ref={chatWrapRef}
-                        className="flex-1 p-4 overflow-y-hidden hover:overflow-auto"
+                        className="flex-1 p-4 overflow-y-hidden hover:overflow-auto md:max-h-screen"
                     >
                         <div className="space-y-4">
                             {messages.map((message) => (

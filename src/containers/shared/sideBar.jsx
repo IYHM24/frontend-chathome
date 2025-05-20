@@ -14,11 +14,9 @@ import {
     esMismaSemana,
     formatearFecha
 } from '@/utils/timeOperations'
-import { use } from 'react'
 import SideBarSkeleton from '@/components/spinners/side_bar_skeleton'
 import NoEncontrado from '@/components/busqueda/no_encontrado'
-import { UsuariosOperation } from '@/services/UsuariosController/UsuariosController.service'
-import { set } from 'firebase/database'
+import Logo from '@/assets/logo/logo.png'
 
 const SideBar = ({
     isSearching,
@@ -85,8 +83,16 @@ const SideBar = ({
 
     return (
     <div className="w-full border-r border-gray-800 bg-black min-h-screen md:!h-screen">
+            
+            {/* Logo - only mobile */}
+            <div className='w-full md:hidden py-2 flex justify-center items-center'>
+                <div className='text-white flex gap-2 items-center'>
+                    <img src={Logo} alt="Logo" className="h-6" />
+                    <strong className='font-extrabold text-sm'>ChatHome</strong>
+                </div>   
+            </div>
             {/* User profile and actions */}
-            <div className="flex items-center justify-between p-3 md:p-4 border-b border-gray-800">
+            <div className="flex items-center justify-between p-3 md:p-4 border-b border-gray-800 gap-2">
                 <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10 border-2 border-purple-500">
                         <img
