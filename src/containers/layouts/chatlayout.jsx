@@ -48,7 +48,6 @@ const Chatlayout = () => {
 
   //Al desconectar un usuario
   const usuarioConectado = (user) => {
-    debugger
     if (isSearchingRef.current) {
       BuscarUsuario(searchValueRef.current);
     } else {
@@ -82,6 +81,7 @@ const Chatlayout = () => {
           setUsuarioChat(usuarioSelecionado)
         }
       }
+      setLoadingUsers(false);
     } catch (error) {
       console.error(error);
     }
@@ -89,6 +89,7 @@ const Chatlayout = () => {
 
 
   const BuscarUsuario = async (username) => {
+    const user = getUser(remember);
     setIsSearching(true);
     searchValueRef.current = username;
     isSearchingRef.current = true;
@@ -97,7 +98,7 @@ const Chatlayout = () => {
         nombre_usuario: username,
         proceso: "obtener chat usuario username"
       })
-      setUsersFound(usuariosFoundDb.data?.msj);
+      setUsersFound(usuariosFoundDb.data?.msj.filter(e => e.uuid_google != user.user.uid));
     }
     else {
       setUsersFound(usuariosObject);
@@ -106,14 +107,8 @@ const Chatlayout = () => {
     }
   }
 
-/*   useEffect(() => {
-    setLoadingUsers(true);
-    BuscarUsuario(searchValue);
-    setLoadingUsers(false);
-  }, [searchValue])
- */
-
   useEffect(() => {
+    setLoadingUsers(true);
     //Configuracion del token backend y conexion HUB
     const user = getUser(remember);
     //Configuraciones

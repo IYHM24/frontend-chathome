@@ -43,10 +43,31 @@ export const formatearFecha = (date) => {
 
 export const obtenerHoraMilitarUnix = (unixTimestamp) => {
     debugger
-    const date = new Date(unixTimestamp );
+    const date = new Date(unixTimestamp);
     const horas = String(date.getHours()).padStart(2, "0");
     const minutos = String(date.getMinutes()).padStart(2, "0");
     return `${horas}:${minutos}`;
 }
 
+export const validarConfiguracionHora = async () => {
+    try {
+        // Obtener la hora del servidor de tiempo
+        const response = await fetch('https://worldtimeapi.org/api/ip');
+        const data = await response.json();
+        const tiempoServidor = new Date(data.datetime);
+        // Obtener la hora local
+        const tiempoLocal = new Date();
+        if (tiempoServidor && tiempoLocal) {
+            // Calcular la diferencia en minutos
+            const diferenciaTiempo = Math.abs(tiempoLocal - tiempoServidor);
+            const diferenciaMinutos = diferenciaTiempo / (1000 * 60);
+            // Considera una diferencia de 5 minutos como aceptable
+            return diferenciaMinutos <= 5;
+        }
+        return true;
+    } catch (error) {
+        console.error('Error al validar la hora:', error);
+        return true;
+    }
+}
 
