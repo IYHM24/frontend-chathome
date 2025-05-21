@@ -64,6 +64,9 @@ const ChatArea = ({ id_chat, usuarioChat, usuarioChatRef, setid_chat, isSearchin
 
             return () => unsubscribe(); // Cleanup listener on unmount or when id_chat changes
         }
+        else {
+            setMessages([]);
+        }
     }, [id_chat])
 
     useEffect(() => {
